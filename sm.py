@@ -7,9 +7,6 @@
 # # Open the netCDF file
 # file = Dataset("jsh.nc")
 
-# # -----------------------------
-# # LOAD VARIABLES
-# # -----------------------------
 
 # iceberg_numbers = file.variables['iceberg_number'][:]
 
@@ -31,9 +28,7 @@
 
 # print("Tracking iceberg:", target_iceberg)
 
-# # -----------------------------
-# # FIND ALL ROWS FOR THIS ICEBERG
-# # -----------------------------
+
 
 # # iceberg_number is likely shape (N,3)
 # # so we compare entire rows
@@ -44,9 +39,7 @@
 
 # print(f"Found {len(indices)} records")
 
-# # -----------------------------
-# # PRINT ALL DETAILS
-# # -----------------------------
+
 
 # for i in indices:
 
@@ -78,9 +71,7 @@
 #     print("  Year:", year[i])
 #     print("  Day :", day[i])
 
-# # -----------------------------
-# # OPTIONAL: PLOT TRAJECTORY
-# # -----------------------------
+
 
 # plt.plot(lon[indices], lat[indices], marker='o')
 
@@ -90,9 +81,7 @@
 
 # # plt.show()
 
-# # -----------------------------
-# # CLOSE FILE
-# # -----------------------------
+
 
 # file.close()
 

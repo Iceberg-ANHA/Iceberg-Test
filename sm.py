@@ -73,6 +73,8 @@
 
 
 
+
+# iceberg_numbers = file.variable
 # plt.plot(lon[indices], lat[indices], marker='o')
 
 # plt.xlabel("Longitude")

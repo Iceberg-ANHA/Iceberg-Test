@@ -6,28 +6,28 @@ import matplotlib.pyplot as plt
 
 from netCDF4 import Dataset
 
-ncfile = 'jsh.nc'
+ncfile = 'dcd.nc'
 
 dd = Dataset(ncfile)
 
-print(dd)
+# print(dd)
 
-print(dd.variables.keys())
+# print(dd.variables.keys())
 
-lon = dd.variables['lon'][:]
+# lon = dd.variables['lon'][:]
 
-print(lon)
+# print(lon)
 
-print(dd.variables['lon'].shape)
+# print(dd.variables['lon'].shape)
 
-lat = dd.variables['lat'][:]
+# lat = dd.variables['lat'][:]
 
-plt.plot(lon, lat, 'o')
-plt.show()
+# plt.plot(lon, lat, 'o')
+# plt.show()
 
 ds = xr.open_dataset(ncfile)
 
-print(ds)
+# print(ds)
 
 sd = ds['lon']
 

@@ -95,7 +95,7 @@ import matplotlib.pyplot as plt
 
 
 
-ds = x.open_dataset("jsh.nc")
+ds = x.open_dataset("dcd.nc")
 
 print(ds)
 
@@ -130,7 +130,7 @@ target_iceberg = iceberg_numbers[0]
 print("Tracking iceberg:", target_iceberg)
 
 
-matches = np.all(iceberg_numbers == target_iceberg, axis=1)
+matches = iceberg_numbers == target_iceberg
 
 indices = np.where(matches)[0]
 
@@ -141,6 +141,7 @@ print(f"Found {len(indices)} records")
 for i in indices:
 
     speed = np.sqrt(uvel[i]**2 + vvel[i]**2)
+
 
     print("\n----------------------")
     print("Record:", i)

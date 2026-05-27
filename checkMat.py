@@ -2,19 +2,22 @@
 
 import netCDF4 as nc
 import numpy as np
+import xarray as x
 
 # Open dataset
-ds = nc.Dataset("mas.nc")
+ds = x.open_dataset("mas.nc")
+
+print(ds)
 
 # Load mass array
-mass = ds.variables["mass"][:]
-print("Array shape:", mass.shape)
+vl = ds.variables["mass"][:]
+print("Array shape:", vl.shape)
 print()
 
 # Find valid icebergs (non-empty rows)
 valid_ids = [
-    i for i in range(mass.shape[0])
-    if not np.all(np.isnan(mass[i]))
+    i for i in range(vl.shape[0])
+    if not np.all(np.isnan(vl[i]))
 ]
 
 if not valid_ids:
@@ -43,32 +46,32 @@ while True:
         print("  Invalid input. Please enter a whole number.\n")
 
 # Display data for the chosen iceberg
-iceberg_data = mass[particle_id]
+iceberg_data = vl[particle_id]
 
 print()
 print("=" * 60)
 print(f"ICEBERG {particle_id}")
 print("=" * 60)
 
-for timestep in range(mass.shape[1]):
+for timestep in range(vl.shape[1]):
     value = iceberg_data[timestep]
     if not np.isnan(value):
-        print(f"mass[{particle_id}][{timestep}] = {value:.6e}")
+        print(f"lat[{particle_id}][{timestep}] = {value:.6e}")
 
-        # mass[iceberg id in the dataset where the iceberg is located][timestep = day] = mass in that instance
+        # lat[iceberg id in the dataset where the iceberg is located][timestep = day] = lat in that instance
 
 print()
 
-plot = input("Plot mass over time? (y/n): ").strip().lower()
+plot = input("Plot lat over time? (y/n): ").strip().lower()
 
 if plot == 'y':
     import matplotlib.pyplot as plt
 
-    time = np.arange(mass.shape[1])
+    time = np.arange(vl.shape[1])
 
     plt.figure(figsize=(10, 5))
     plt.plot(time, iceberg_data, marker='o')
-    plt.title(f"Mass of Iceberg {particle_id} Over Time")
+    plt.title(f"Lat of Iceberg {particle_id} Over Time")
     plt.xlabel("Time (days)")
     plt.ylabel("Mass")
     plt.grid()

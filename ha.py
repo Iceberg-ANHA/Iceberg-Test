@@ -74,7 +74,7 @@ def main() -> None:
     parser.add_argument(
         "file",
         nargs="?",
-        default="dcd.nc",
+        default="lon_01.nc",
         help="Path to the netCDF file to read",
     )
     parser.add_argument(

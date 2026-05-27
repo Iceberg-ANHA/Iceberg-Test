@@ -9,9 +9,62 @@ import cartopy.feature as cfeature
 import plotly.graph_objects as go
 
 
+def plot_choice(indices, target_iceberg, lon, lat, mass, day, sst, uvel, vvel, ss):
+    """Allow user to choose which plot to display."""
+    print("\nAvailable plot types:")
+    print("1. Trajectory (Longitude vs Latitude)")
+    print("2. Mass over Time (Day vs Mass)")
+    print("3. Velocity over Time (Day vs Speed)")
+    print("4. Sea Ice Lock over Time (Day vs Sea Ice Lock)")
+    while True:
+        try:
+            choice = int(input("\nEnter plot type (1-4): "))
+            if choice in [1, 2, 3, 4]:
+                plot_graph(choice, indices, target_iceberg, lon, lat, mass, day, sst, uvel, vvel, ss)
+                return choice
+            else:
+                print("  Please choose a number between 1 and 4.")
+        except ValueError:
+            print("  Please enter a valid integer.")
 
 
-ds = x.open_dataset("dcd.nc", decode_times=False)
+def plot_graph(choice, indices, target_iceberg, lon, lat, mass, day, sst, uvel, vvel, ss):
+    """Generate and display the selected plot."""
+    if choice == 1:
+        plt.plot(lon[indices], lat[indices], marker='o')
+        plt.xlabel("Longitude")
+        plt.ylabel("Latitude")
+        plt.title(f"Iceberg {target_iceberg} — Trajectory")
+        plt.grid()
+        plt.show()
+
+    elif choice == 2:
+        plt.plot(day[indices], mass[indices], marker='o')
+        plt.xlabel("Day")
+        plt.ylabel("Mass")
+        plt.title(f"Iceberg {target_iceberg} — Mass Over Time")
+        plt.grid()
+        plt.show()
+
+    elif choice == 3:
+        speed = np.sqrt(uvel[indices]**2 + vvel[indices]**2)
+        plt.plot(day[indices], speed, marker='o')
+        plt.xlabel("Day")
+        plt.ylabel("Speed")
+        plt.title(f"Iceberg {target_iceberg} — Speed Over Time")
+        plt.grid()
+        plt.show()
+
+    elif choice == 4:
+        plt.plot(day[indices], ss[indices], marker='o')
+        plt.xlabel("Day")
+        plt.ylabel("Sea Ice Lock")
+        plt.title(f"Iceberg {target_iceberg} — Sea Ice Lock Over Time")
+        plt.grid()
+        plt.show()
+
+
+ds = x.open_dataset("b1.nc", decode_times=False)
 
 print(ds)
 
@@ -49,8 +102,6 @@ day = ds["day"].values
 
 print(ds["length"].attrs)
 
-
-
 # Show available icebergs and prompt user to pick one
 unique_icebergs = np.unique(iceberg_numbers)
 print(f"\nAvailable iceberg IDs ({len(unique_icebergs)} total):")
@@ -69,7 +120,6 @@ while True:
 
 print("Tracking iceberg:", target_iceberg)
 
-
 matches = iceberg_numbers == target_iceberg
 
 indices = np.where(matches)[0]
@@ -78,12 +128,9 @@ indices = np.where(matches)[0]
 
 print(f"Found {len(indices)} records")
 
-
-
 for i in indices:
 
     speed = np.sqrt(uvel[i]**2 + vvel[i]**2)
-
 
     print("\n----------------------")
     print("Record:", i)
@@ -112,35 +159,8 @@ for i in indices:
     print("  Year:", year[i])
     print("  Day:", day[i])
 
-
-
-
-# plt.plot(lon[indices], lat[indices], marker='o')
-
-# plt.grid()
-
-
-# plt.xlabel("Longitude")
-# plt.ylabel("Latitude")
-# plt.title("Iceberg Trajectory")
-
-# plt.show()
-
-# time_order = np.argsort(year[indices] * 365 + day[indices])
-# indices = indices[time_order]
-
-plt.plot(day[indices], mass[indices], marker='o')
-
-plt.grid()
-
-plt.xlabel("Day")
-plt.ylabel("Mass")
-plt.title(f"Iceberg {target_iceberg} — Mass Over Time")
-plt.show()
-
-
-ds.close()
-
+# Call plot_choice to let user select a plot
+plot_choice(indices, target_iceberg, lon, lat, mass, day, sst, uvel, vvel, ss)
 
 
 
@@ -197,63 +217,6 @@ ax.gridlines(draw_labels=True, dms=True, x_inline=False, y_inline=False, color='
 
 plt.show()
 
-
-
-
-
-# testing the files and checking then out
-
-# import numpy as np
-# import matplotlib.pyplot as plt
-# from xarray import Dataset
-
-
-
-# # Open the netCDF file
-# file = Dataset("jsh.nc")
-
-
-# iceberg_numbers = file.variables['iceberg_number'][:]
-
-# print("Iceberg numbers shape:", iceberg_numbers.shape)
-# print("First 5 iceberg numbers:\n", iceberg_numbers[:5])
-
-# lon = file.variables['lon'][:]
-# lat = file.variables['lat'][:]
-# mass = file.variables['mass'][:]
-# sst = file.variables['sst'][:]
-# uvel = file.variables['uvel'][:]
-# vvel = file.variables['vvel'][:]
-# year = file.variables['year'][:]
-# day = file.variables['day'][:]
-
-
-
-# target_iceberg = iceberg_numbers[0]
-
-# print("Tracking iceberg:", target_iceberg)
-
-
-
-# # iceberg_number is likely shape (N,3)
-# # so we compare entire rows
-
-# matches = np.all(iceberg_numbers == target_iceberg, axis=1)
-
-# indices = np.where(matches)[0]
-
-# print(f"Found {len(indices)} records")
-
-
-
-# for i in indices:
-
-#     print("\n----------------------")
-#     print("Record:", i)
-
-#     print("Iceberg ID:", iceberg_numbers[i])
-
-#     print("Position:")
 #     print("  Longitude:", lon[i])
 #     print("  Latitude :", lat[i])
 
@@ -287,7 +250,5 @@ plt.show()
 # plt.title("Iceberg Trajectory")
 
 # # plt.show()
-
-
 
 # file.close()
